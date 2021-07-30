@@ -44,7 +44,10 @@ M.set = function(color_table)
         guifg = color_table.black,
         guibg = color_table.blue,
       },
-      inactive = inactive,
+      inactive = {
+        guifg = color_table.blue,
+        guibg = color_table.black,
+      },
     },
     high = {
       active = {
