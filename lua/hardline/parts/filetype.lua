@@ -20,8 +20,14 @@ local function get_file_icon()
   return icon .. ' '
 end
 
+local function get_filetype()
+  return bo.filetype
+end
+
 local function get_item()
-  return get_file_icon .. bo.filetype
+ local icon = get_file_icon()
+ local ft = get_filetype()
+ return table.concat({icon, ft})
 end
 
 return {
