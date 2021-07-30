@@ -7,32 +7,28 @@ local fn, cmd, vim = vim.fn, vim.cmd, vim
 local g, o, wo = vim.g, vim.o, vim.wo
 local fmt = string.format
 local common = require('hardline.common')
-local bufferline = require('hardline.bufferline')
 local custom_colors = require('hardline.themes.custom_colors')
 local M = {}
 
 -------------------- OPTIONS -------------------------------
+
+local colors = {
+    white = "#fbfbfb",
+    light_gray = '#555e61',
+    gray = "#2e373b",
+    black = "#182227",
+    blue = '#94aadb',
+    red = "#dda790",
+    aqua = "#b5d8f6",
+    green = "#8bb664",
+    yellow = "#e9c062",
+    purple = "#bfabcb"
+}
+
+
 M.options = {
-  bufferline = false,
-  bufferline_settings = {
-      exclude_terminal = false,
-      show_index = false,
-      separator = '|',
-  },
   theme = 'default',
-  custom_theme = {
-    text = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-    normal = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-    insert = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-    replace = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-    inactive_comment = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-    inactive_cursor = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-    inactive_menu = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-    visual = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-    command = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-    alt_text = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-    warning = {gui = "NONE", cterm = "NONE", cterm16 = "NONE"},
-  },
+  custom_theme = colors,
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
     {class = 'high', item = require('hardline.parts.git').get_item, hide = 80},
@@ -130,16 +126,6 @@ local function get_section_state(section)
       return mode.state
     end
   end
-  if section.class == 'bufferline' then
-    if section.separator then
-      return 'separator'
-    end
-    local state = section.current and 'current' or 'background'
-    if section.modified then
-      state = fmt('%s_modified', state)
-    end
-    return state
-  end
   return common.is_active() and 'active' or 'inactive'
 end
 
@@ -177,20 +163,6 @@ function M.update_statusline()
   return table.concat(highlight_sections(sections))
 end
 
--------------------- BUFFERLINE ----------------------------
-function M.update_bufferline()
-  local sections = {}
-  local settings = M.options.bufferline_settings
-  local buffers = bufferline.get_buffers(settings)
-  for i, buffer in ipairs(buffers) do
-    table.insert(sections, bufferline.to_section(buffer, i, settings))
-    if i < #buffers then
-      table.insert(sections, M.options.bufferline_settings.separator)
-    end
-  end
-  return table.concat(highlight_sections(sections))
-end
-
 -------------------- SETUP -----------------------------
 local function set_theme()
   if type(M.options.theme) ~= 'string' then
@@ -224,19 +196,11 @@ local function set_statusline()
   wo.statusline = o.statusline
 end
 
-local function set_bufferline()
-  o.showtabline = 2
-  o.tabline = [[%!luaeval('require("hardline").update_bufferline()')]]
-end
-
 function M.setup(user_options)
   M.options = vim.tbl_extend('force', M.options, user_options)
   set_theme()
   set_hlgroups()
   set_statusline()
-  if M.options.bufferline then
-    set_bufferline()
-  end
 end
 
 ------------------------------------------------------------
