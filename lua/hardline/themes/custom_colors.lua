@@ -1,4 +1,4 @@
--- Custom color_tablecheme
+-- Custom colorscheme
 
 local M = {}
 
@@ -77,6 +77,7 @@ M.set = function(color_table)
       inactive = inactive,
     },
     cool = {
+      active = {
         guifg = color_table.black,
         guibg = color_table.cool,
       },
