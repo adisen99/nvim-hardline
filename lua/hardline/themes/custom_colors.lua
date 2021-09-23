@@ -10,28 +10,28 @@ M.set = function(color_table)
 
   return {
     mode = {
-    inactive = inactive,
-    normal = {
-      guifg = color_table.black,
-      guibg = color_table.blue,
+      inactive = inactive,
+      normal = {
+        guifg = color_table.black,
+        guibg = color_table.blue,
+      },
+      insert = {
+        guifg = color_table.black,
+        guibg = color_table.green,
+      },
+      replace = {
+        guifg = color_table.black,
+        guibg = color_table.cyan,
+      },
+      visual = {
+        guifg = color_table.black,
+        guibg = color_table.purple,
+      },
+      command = {
+        guifg = color_table.black,
+        guibg = color_table.red,
+      },
     },
-    insert = {
-      guifg = color_table.black,
-      guibg = color_table.green,
-    },
-    replace = {
-      guifg = color_table.gray,
-      guibg = color_table.aqua,
-    },
-    visual = {
-      guifg = color_table.black,
-      guibg = color_table.purple,
-    },
-    command = {
-      guifg = color_table.black,
-      guibg = color_table.red,
-    },
-  },
     mode_cool = {
       inactive = inactive,
       normal = {
