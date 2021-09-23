@@ -1,50 +1,25 @@
 # nvim-hardline
 
+### branch - personal
+
 A statusline / bufferline for Neovim written in Lua. It is inspired by
 [vim-airline](https://github.com/vim-airline/vim-airline) but aims to
 be as light and simple as possible.
 
-_**Note**: this plugin is mainly for my own use. I won't add new
-features/parts/themes if I don't need them. Feel free to submit PRs or fork the
-plugin though._
+_**Note**: this here is a modification of the original plugin for my personal use in the personal
+branch.
 
 ![screenshot](./screenshot.png)
-
-## Installation
-With [packer.nvim](https://github.com/wbthomason/packer.nvim):
-```lua
-use {'ojroques/nvim-hardline'}
-```
-
-With [paq-nvim](https://github.com/savq/paq-nvim):
-```lua
-paq {'ojroques/nvim-hardline'}
-```
-
-## Usage
-In your *init.lua*:
-```lua
-require('hardline').setup {}
-```
-
-If you're using a *.vimrc* or *init.vim*:
-```vim
-lua require('hardline').setup {}
-```
 
 ## Configuration
 You can pass options to the `setup()` function. Here are all available options
 with their default settings:
 ```lua
 require('hardline').setup {
-  bufferline = false,  -- enable bufferline
-  bufferline_settings = {
-    exclude_terminal = false,  -- don't show terminal buffers in bufferline
-    show_index = false,        -- show buffer indexes (not the actual buffer numbers) in bufferline
-  },
-  theme = 'default',   -- change theme
+  theme = color_table,   -- change theme
   sections = {         -- define sections
     {class = 'mode', item = require('hardline.parts.mode').get_item},
+    -- {class = 'mode_cool', item = require('hardline.parts.mode').get_item},
     {class = 'high', item = require('hardline.parts.git').get_item, hide = 100},
     {class = 'med', item = require('hardline.parts.filename').get_item},
     '%<',
@@ -54,7 +29,7 @@ require('hardline').setup {
     {class = 'warning', item = require('hardline.parts.lsp').get_warning},
     {class = 'warning', item = require('hardline.parts.whitespace').get_item},
     {class = 'high', item = require('hardline.parts.filetype').get_item, hide = 80},
-    {class = 'mode', item = require('hardline.parts.line').get_item},
+    {class = 'cool', item = require('hardline.parts.line').get_item},
   },
 }
 ```
@@ -65,7 +40,6 @@ that list is a table with the following attributes:
   available:
   * `mode`: change color based on the current mode.
   * `low`, `med`, `high`: colors for different levels of importance.
-  * `bufferline`: colors for the bufferline.
   * `error`, `warning`: colors for the diagnostics of Neovim built-in LSP
     client.
 * `item`: the actual text being displayed. Must be a string or a function
