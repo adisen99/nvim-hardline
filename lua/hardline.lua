@@ -7,7 +7,7 @@ local fn, cmd, vim = vim.fn, vim.cmd, vim
 local g, o, wo = vim.g, vim.o, vim.wo
 local fmt = string.format
 local common = require('hardline.common')
-local custom_colors = require('hardline.themes.custom_colors')
+local set_colors = require('hardline.themes.set_colors')
 local M = {}
 
 -------------------- OPTIONS -------------------------------
@@ -28,8 +28,7 @@ local colors = {
 
 
 M.options = {
-  theme = 'default',
-  custom_theme = colors,
+  theme = colors,
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
     {class = 'high', item = require('hardline.parts.git').get_item, hide = 100},
@@ -166,15 +165,10 @@ end
 
 -------------------- SETUP -----------------------------
 local function set_theme()
-  if type(M.options.theme) ~= 'string' then
+  if type(M.options.theme) ~= 'table' then
     return
   end
-  if M.options.theme == 'custom' then
-    M.options.theme = custom_colors.set(M.options.custom_theme)
-  else
-    local theme = fmt('hardline.themes.%s', M.options.theme)
-    M.options.theme = require(theme)
-  end
+  M.options.theme = set_colors.set(M.options.theme)
 end
 
 local function set_hlgroups()
