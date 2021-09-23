@@ -22,7 +22,8 @@ local colors = {
     aqua = "#b5d8f6",
     green = "#8bb664",
     yellow = "#e9c062",
-    purple = "#bfabcb"
+    purple = "#bfabcb",
+    cool = '#94aadb'
 }
 
 
