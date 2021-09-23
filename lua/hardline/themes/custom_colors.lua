@@ -84,6 +84,7 @@ M.set = function(color_table)
       inactive = {
         guifg = color_table.cool,
         guibg = color_table.black,
+      },
     },
     error = {
       active = {
