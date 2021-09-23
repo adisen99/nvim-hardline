@@ -121,7 +121,7 @@ end
 
 -------------------- SECTION HIGHLIGHTING ------------------
 local function get_section_state(section)
-  if section.class == 'mode' then
+  if section.class == 'mode' or section.class == 'mode_cool' then
     if common.is_active() then
       local mode = common.modes[fn.mode()] or common.modes['?']
       return mode.state
