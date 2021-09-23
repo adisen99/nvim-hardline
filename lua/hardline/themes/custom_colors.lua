@@ -21,7 +21,7 @@ M.set = function(color_table)
       },
       replace = {
         guifg = color_table.black,
-        guibg = color_table.cyan,
+        guibg = color_table.aqua,
       },
       visual = {
         guifg = color_table.black,
