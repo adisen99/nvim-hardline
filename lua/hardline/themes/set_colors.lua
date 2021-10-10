@@ -4,7 +4,7 @@ local M = {}
 
 M.set = function(color_table)
   local inactive = {
-    guifg = color_table.light_gray,
+    guifg = color_table.cool,
     guibg = color_table.black,
   }
 
@@ -81,10 +81,7 @@ M.set = function(color_table)
         guifg = color_table.black,
         guibg = color_table.cool,
       },
-      inactive = {
-        guifg = color_table.cool,
-        guibg = color_table.black,
-      },
+      inactive = inactive,
     },
     error = {
       active = {
