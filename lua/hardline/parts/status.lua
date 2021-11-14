@@ -43,7 +43,7 @@ M.current_function = function(_, buffer)
 end
 
 M.server_progress = function(_, buffer)
-  if not buffer.lsp or not has_lsp_status then
+  if vim.inspect(vim.lsp.buf_get_clients()) == {} or not has_lsp_status then
     return ''
   end
 
