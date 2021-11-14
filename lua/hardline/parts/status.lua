@@ -42,12 +42,12 @@ M.current_function = function(_, buffer)
   return ''
 end
 
-M.server_progress = function(_, buffer)
+M.server_progress = function(_, bufnr)
   if vim.inspect(vim.lsp.buf_get_clients()) == {} or not has_lsp_status then
     return ''
   end
 
-  local buffer_clients = vim.lsp.buf_get_clients(buffer.bufnr)
+  local buffer_clients = vim.lsp.buf_get_clients(bufnr)
   local buffer_client_set = {}
   for _, v in pairs(buffer_clients) do
     buffer_client_set[v.name] = true
