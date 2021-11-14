@@ -36,7 +36,7 @@ M.options = {
     '%<',
     {class = 'med', item = '%='},
     {class = 'low', item = require('hardline.parts.wordcount').get_item, hide = 100},
-    {class = 'low', item = require('hardline.parts.status'), hide=80},
+    {class = 'low', item = require('hardline.parts.status').server_progress, hide=80},
     {class = 'error', item = require('hardline.parts.lsp').get_error},
     {class = 'warning', item = require('hardline.parts.lsp').get_warning},
     {class = 'warning', item = require('hardline.parts.whitespace').get_item},
