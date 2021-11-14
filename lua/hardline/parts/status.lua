@@ -36,14 +36,14 @@ M.current_function = function(_, buffer)
 
   local ok, current_func = pcall(get_current_function, _, buffer)
   if ok and current_func and #current_func > 0 then
-    return string.format('[%s]', current_func)
+    return string.format('[ %s ]', current_func)
   end
 
   return ''
 end
 
 M.server_progress = function(_, buffer)
-  if not buffer.lsp or has_lsp_status then
+  if not buffer.lsp or not has_lsp_status then
     return ''
   end
 
@@ -67,6 +67,7 @@ M.server_progress = function(_, buffer)
         if msg.percentage then
           contents = contents .. ' (' .. msg.percentage .. ')'
         end
+
       elseif msg.status then
         contents = msg.content
       else
