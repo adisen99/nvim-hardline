@@ -1,10 +1,11 @@
-local fn = vim.fn
+-- local fn = vim.fn
+local api = vim.api
 local o, bo, wo = vim.o, vim.bo, vim.wo
 local fmt = string.format
 local common = require('hardline.common')
 
 local function get_mode()
-  local mode = common.modes[fn.mode()] or common.modes['?']
+  local mode = common.modes[api.nvim_get_mode()] or common.modes['?']
   return mode.text
 end
 
