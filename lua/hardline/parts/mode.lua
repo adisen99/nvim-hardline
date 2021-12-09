@@ -5,7 +5,7 @@ local fmt = string.format
 local common = require('hardline.common')
 
 local function get_mode()
-  local mode = common.modes[api.nvim_get_mode()] or common.modes['?']
+  local mode = common.modes[api.nvim_get_mode().mode] or common.modes['?']
   return mode.text
 end
 
