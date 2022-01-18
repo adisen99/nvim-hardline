@@ -4,7 +4,7 @@ local fmt = string.format
 local function get_diagnostic(prefix, severity)
   local count
   if fn.has('nvim-0.6') == 0 then
-    count = lsp.diagnostic.get_count(0, severity)
+    count = lsp.diagnostic.get(0, severity)
   else
     local severities = {
       ['Warning'] = diagnostic.severity.WARN,
