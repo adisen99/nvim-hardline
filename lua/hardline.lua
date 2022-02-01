@@ -82,7 +82,7 @@ local function remove_empty_sections(sections)
 end
 
 local function load_sections(sections)
-  local function load_section(section)
+  function load_section(section)
     if type(section) == 'string' then
       return section
     end
@@ -120,7 +120,7 @@ local function get_section_state(section, is_active)
 end
 
 local function highlight_sections(sections, is_active)
-  local function highlight_section(section)
+  function highlight_section(section)
     if type(section) ~= 'table' then
       return section
     end
