@@ -3,6 +3,7 @@
 -- github.com/ojroques
 
 -------------------- VARIABLES -----------------------------
+
 local fn, cmd, vim = vim.fn, vim.cmd, vim
 local g, o, wo = vim.g, vim.o, vim.wo
 local fmt = string.format
@@ -26,7 +27,6 @@ local colors = {
     cool = '#94aadb'
 }
 
-
 M.options = {
   theme = colors,
   sections = {
@@ -45,18 +45,8 @@ M.options = {
   },
 }
 
--------------------- SECTION CACHE -------------------------
-local cache = {}
-
-local function refresh_cache()
-  for winid, _ in pairs(cache) do
-    if fn.win_id2win(winid) == 0 then
-      cache[winid] = nil
-    end
-  end
-end
-
 -------------------- SECTION MANAGEMENT --------------------
+
 local function aggregate_sections(sections)
   local aggregated, piv = {}, 1
   while piv <= #sections do
@@ -91,77 +81,71 @@ local function remove_empty_sections(sections)
   return vim.tbl_filter(filter, sections)
 end
 
-local function load_section(section)
-  if type(section) == 'string' then
-    return section
-  end
-  if type(section) == 'function' then
-    return section()
-  end
-  if type(section) == 'table' then
-    return {
-      class = section.class or 'none',
-      item = load_section(section.item),
-    }
-  end
-  common.echo('WarningMsg', 'Invalid section.')
-  return ''
-end
-
 local function load_sections(sections)
+  local function load_section(section)
+    if type(section) == 'string' then
+      return section
+    end
+    if type(section) == 'function' then
+      return section()
+    end
+    if type(section) == 'table' then
+      return {
+        class = section.class or 'none',
+        item = load_section(section.item),
+      }
+    end
+    common.echo('WarningMsg', 'Invalid section.')
+    return ''
+  end
   return vim.tbl_map(load_section, sections)
 end
 
 local function remove_hidden_sections(sections)
-  local filter = function(s)
-    return not s.hide or s.hide <= fn.winwidth(0)
+  local filter = function(section)
+    return not section.hide or section.hide <= fn.winwidth(0)
   end
   return vim.tbl_filter(filter, sections)
 end
 
 -------------------- SECTION HIGHLIGHTING ------------------
-local function get_section_state(section)
+local function get_section_state(section, is_active)
   if section.class == 'mode' or section.class == 'mode_cool' then
-    if common.is_active() then
+    if is_active then
       local mode = common.modes[fn.mode()] or common.modes['?']
       return mode.state
     end
   end
-  return common.is_active() and 'active' or 'inactive'
+  return is_active and 'active' or 'inactive'
 end
 
-local function highlight_section(section)
-  if type(section) ~= 'table' then
-    return section
+local function highlight_sections(sections, is_active)
+  local function highlight_section(section)
+    if type(section) ~= 'table' then
+      return section
+    end
+    if section.class == 'none' then
+      return section.item
+    end
+    local state = get_section_state(section, is_active)
+    local hlgroup = fmt('Hardline_%s_%s', section.class, state)
+    if fn.hlexists(hlgroup) == 0 then
+      return section.item
+    end
+    return fmt('%%#%s#%s%%*', hlgroup, section.item)
   end
-  if section.class == 'none' then
-    return section.item
-  end
-  local state = get_section_state(section)
-  local hlgroup = fmt('Hardline_%s_%s', section.class, state)
-  if fn.hlexists(hlgroup) == 0 then
-    return section.item
-  end
-  return fmt('%%#%s#%s%%*', hlgroup, section.item)
-end
-
-local function highlight_sections(sections)
   return vim.tbl_map(highlight_section, sections)
 end
 
 -------------------- STATUSLINE ----------------------------
-function M.update_statusline()
-  local sections = cache[g.statusline_winid]
-  if common.is_active() or not sections then
-    sections = M.options.sections
-    sections = remove_hidden_sections(sections)
-    sections = load_sections(sections)
-    sections = remove_empty_sections(sections)
-    sections = aggregate_sections(sections)
-    cache[g.statusline_winid] = sections
-    refresh_cache()
-  end
-  return table.concat(highlight_sections(sections))
+function M.update_statusline(is_active)
+  local sections = M.options.sections
+  sections = remove_hidden_sections(sections)
+  sections = load_sections(sections)
+  sections = remove_empty_sections(sections)
+  sections = aggregate_sections(sections)
+  sections = highlight_sections(sections, is_active)
+  return table.concat(sections)
 end
 
 -------------------- SETUP -----------------------------
@@ -188,8 +172,14 @@ end
 
 local function set_statusline()
   o.showmode = false
-  o.statusline = [[%!luaeval('require("hardline").update_statusline()')]]
-  wo.statusline = o.statusline
+  o.statusline = [[%!luaeval('require("hardline").update_statusline(true)')]]
+  vim.cmd([[
+  augroup hardline
+    autocmd!
+    autocmd WinEnter,BufEnter * setlocal statusline=%{%luaeval('require(\"hardline\").update_statusline(true)')%}
+    autocmd WinLeave,BufLeave * setlocal statusline=%{%luaeval('require(\"hardline\").update_statusline(false)')%}
+  augroup END
+  ]])
 end
 
 function M.setup(user_options)
