@@ -40,13 +40,21 @@ M.options = {
     {class = 'error', item = require('hardline.parts.lsp').get_error},
     {class = 'warning', item = require('hardline.parts.lsp').get_warning},
     {class = 'warning', item = require('hardline.parts.whitespace').get_item},
-    {class = 'high', item = require('hardline.parts.filetype').get_item, hide = 80},
+    {class = 'high', item = require('hardline.parts.filetype').get_item, hide = 60},
     {class = 'high', item = require('hardline.parts.line').get_item},
   },
 }
 
 -------------------- SECTION MANAGEMENT --------------------
-
+-- Merge sections with same 'class' attribute and add spacing. For instance this:
+-- {class = 'low', item = 'first'},
+-- {class = 'med', item = 'second'},
+-- {class = 'med', item = 'third'},
+-- {class = 'high', item = 'fourth'},
+-- will become this:
+-- {class = 'low', item = ' first '},
+-- {class = 'med', item = ' second third '},
+-- {class = 'high', item = ' fourth '},
 local function aggregate_sections(sections)
   local aggregated, piv = {}, 1
   while piv <= #sections do
