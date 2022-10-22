@@ -1,4 +1,4 @@
-local diagnostic, fn = vim.diagnostic, vim.fn
+local diagnostic, fn = vim.lsp.diagnostic, vim.fn
 local fmt = string.format
 
 local function get_diagnostic(prefix, severity)
