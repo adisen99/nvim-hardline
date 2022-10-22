@@ -1,16 +1,16 @@
-local diagnostic, fn = vim.lsp.diagnostic, vim.fn
 local fmt = string.format
+local fn = vim.fn
 
 local function get_diagnostic(prefix, severity)
   local count
   if fn.has('nvim-0.6') == 0 then
-    count = diagnostic.get(0, severity)
+    count = vim.lsp.diagnostic.get_count(0, severity)
   else
     local severities = {
-      ['Warning'] = diagnostic.severity.WARN,
-      ['Error'] = diagnostic.severity.ERROR,
+      ['Warning'] = vim.diagnostic.severity.WARN,
+      ['Error'] = vim.diagnostic.severity.ERROR,
     }
-    count = #diagnostic.get(0, {severity = severities[severity]})
+    count = #vim.diagnostic.get(0, {severity = severities[severity]})
   end
   if count < 1 then
     return ''
